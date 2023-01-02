@@ -107,77 +107,75 @@ DROP FUNCTION ufn_darBonus;
 ```
 
 ## 3. Condições IF e CASE
-No MySQL o autocommit está ligado por default, o que significa que todas as instruções são executadas como uma transação quando é encontrado o caracter ```;```. Podemos desligar este mecanismo usando:
+Podemos em SQL usar condições para definir o controlo de fluxo de execução dos blocos de código. Tal como em muitas outras linguagens, a cláusula ```IF``` permite definir o comportamento de execução de acordo com o resultado de teste de uma dada condição. Podemos testar várias condições através do encadeamento de várias cláusulas ```IF-ELSIF```.
+A sintaxe é:
 
 ``` sql
-SET autocommit=0;
+IF <condition> THEN
+<statements>
+ELSEIF <condition> THEN
+<statements>
+ELSE
+<statements>
+END IF
 ```
 
-Em SQL podemos as cláusulas ```START TRANSACTION``` inicia uma transação e a cláusula ```COMMIT``` termina e executa a transação.
+por exemplo:
+``` sql
+IF salario > 760 THEN
+  SET @res = 'acima do salário mínimo';
+ELSE
+  SET @res = 'abaixo do salário mínimo';
+END IF
+```
+
+Conjunto de várias condições podem também ser testadas usando a cláusula ```CASE```, a sintaxe é:
 
 ``` sql
-START TRANSACTION;
-(sequência de comandos corpo da transação)
-COMMIT;
+CASE <expression>
+WHEN <value> THEN
+<statements>
+WHEN <value> THEN
+<statements>
+…
+ELSE
+<statements>
+END CASE;
 ```
 
-Exemplo:
-
-<img width="272" alt="image" src="https://user-images.githubusercontent.com/32137262/207200753-1bfd6f09-55b2-4e78-a012-932c35ed8516.png">
-
-Durante a execução de uma transação, podemos anular a sua execução voltando ao estado anterior usando a cláusula ```ROLLBACK```:
+ou
 
 ``` sql
-START TRANSACTION;
-(sequência de comandos corpo da transação)
-ROLLBACK;
+CASE
+WHEN <condition> THEN
+<statements>
+WHEN <condition> THEN
+<statements>
+…
+ELSE
+<statements>
+END CASE;
 ```
 
-O estado da base de dados é reposto para o ponto anterior à transação.
-Podemos inclusivamente definir pontos chave (savepoints) até onde queremos reverter usando a cláusula ```SAVEPOINT nome-savepoint```. Podemos escolher até onde deve ir o rollback usando ```ROLLBACK TO SAVEPOINT nome-savepoint```.
+por exemplo:
+``` sql
+CASE JOB_ID
+  WHEN 'IT_ADMIN' THEN SET @res = 'Administrador de Sistemas';
+  WHEN 'HR_MGR' THEN SET @res = 'Gestor de Recurso Humanos';
+ELSE
+  SET @res = 'Não definido';
+END CASE;
+```
 
-### Exercícios
-Abra duas sessões/tabs com scripts diferentes no DBeaver. Sugestão no topo adicione um comentário sessão1 ou sessão2
-1. Verifique o funcionamento do autocommit. Execute os comandos pela ordem indicada:
-  * Na sessão 1, desligue o autocommit
-  * Na sessão 1, verifique o nome do empregado cujo id é 100
-  * Na sessão 2, verifique o nome do empregado cujo id é 100
-  * Na sessão 1, altere o nome do empregado para Cristiano Ronaldo e verifique que os dados foram atualizados
-  * Na sessão 2, verifique o nome do empregado cujo id é 100 (qual a conclusão?)
-  * Na sessão 1, execute a transação e verifique o resultado
-  * Na sessão 2, verifique o nome do empregado cujo id é 100 (qual a conclusão?)
-2. Volte a executar a sequência de passos descrita no exercício anterior mas no penúltimo passo reverta a transação em vez de executa-la.
-3. Testar funcionamento de uma transação
-  * Na sessão 1, volte a ligar o autocommit
-  * Na sessão 1, inicie uma transação   
-  * Na sessão 1, verifique o nome do empregado cujo id é 100
-  * Na sessão 2, verifique o nome do empregado cujo id é 100
-  * Na sessão 1, altere o nome do empregado para Fernando Santos e verifique que os dados foram atualizados
-  * Na sessão 2, verifique o nome do empregado cujo id é 100 (qual a conclusão?)
-  * Na sessão 1, execute a transação e verifique o resultado
-  * Na sessão 2, verifique o nome do empregado cujo id é 100 (qual a conclusão?)
-4. Volte a executar a sequência de passos descrita no exercício anterior mas no penúltimo passo reverta a transação em vez de executa-la.
-5. Testar funcionamento do nível de isolamento
-  * Na sessão 1, altere o nível de isolamento global para read uncommitted
-  * Na sessão 1, inicie uma transação   
-  * Na sessão 1, verifique o nome do empregado cujo id é 100
-  * Na sessão 2, verifique o nome do empregado cujo id é 100
-  * Na sessão 1, altere o nome do empregado para Diogo Costa e verifique que os dados foram atualizados
-  * Na sessão 2, verifique o nome do empregado cujo id é 100 (qual a conclusão?)
-  * Na sessão 1, reverta a transação e verifique o resultado
-  * Na sessão 2, verifique o nome do empregado cujo id é 100 (qual a conclusão?) 
-6. Volte a executar a sequência de passos descrita no exercício anterior para verificar o resultado quando o nível de isolamento é read commited e repeatable read.
+## 4. Ciclos WHILE, REPEAT e LOOP
 
-
-## 4. Ciclos WHILE e LOOP
-(não há trabalho de casa devido a entega de trabalho de grupo)
 
 ### Exercícios
 Abra duas sessões/tabs com scripts diferentes no DBeaver. Sugestão no topo adicione um comentário sessão1 ou sessão2
 
 
 ## 5. Trabalho de Casa
-(não há trabalho de casa devido a entega de trabalho de grupo)
+(não há trabalho de casa devido a entrega de trabalho de grupo até dia 8)
 
 
 ## 6. Resoluções
