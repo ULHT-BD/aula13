@@ -31,7 +31,7 @@ Deve também ter o cliente DBeaver.
 ## 1. Stored Procedures
 Stored Procedure são procedimentos em SQL armazenados como objetos de código pré-compilado na base de dados e que podem ser executados diretamente no SGBD. Permitem assegurar eficiência e segurança.
 
-A sintaxe para criação de um SP é
+A sintaxe para criação de um SP é:
 
 ``` sql
 CREATE PROCEDURE <proc-name> 
@@ -41,7 +41,9 @@ BEGIN
 END;
 ```
 
-por exemplo
+onde os parâmetros podem ser definidos como de entrada ```IN```, saída ```OUT``` ou entrada e saída ```INOUT```.
+
+Por exemplo
 ``` sql
 DELIMITER $$
 
@@ -55,32 +57,54 @@ END$$
 DELIMITER ;
 ```
 
+Neste exemplo a cláusula ```DELIMITER``` permite alterar o caracter delimitador de instruções para que este possa ser usado no corpo do bloco de código. No final é importante repôr o caracter ```;```.
+
 Chamamos o procedimento usando a cláusula ```CALL```, por exemplo:
 ``` sql
 CALL sp_exemplo(1, @a);
 ```
 
+Podemos destruir um stored procedure usando a cláusula ```DROP```:
+``` sql
+DROP PROCEDURE sp_exemplo;
+```
 
 ## 2. Functions
-A execução concorrente de várias transações pode conduzir a várias anomalias bem conhecidas Dirty Read, Non-Repeatable Read e Phantom Read.
-
-Consoante a aplicação a desenvolver, podemos querer tolerar/permitir a ocorrência de algumas destas anomalias ou assegurar um maior nível de isolamento.
-
-A tabela resume as anomalias e níveis de isolamento:
-
-<img width="552" alt="image" src="https://user-images.githubusercontent.com/32137262/207202337-6c54effa-a76e-4200-9b10-6af2669d2048.png">
-
-Em SQL podemos alterar o nível de isolamento de forma global, durante a sessão ou apenas para a transação, usando:
+À semelhança dos Stored Procedures, as Stored Functions são um tipo de objeto constituído por um bloco de código précompilado armazenado na base de dados e que pode ser executado em qualquer momento. Uma função pode ser criada através da sintaxe:
 
 ``` sql
-SET [GLOBAL | SESSION] TRANSACTION ISOLATION LEVEL level;
+CREATE FUNCTION <nome> (<arg1> <type1>, ) [<arg2> <type2> [,…]) RETURNS <return type> [DETERMINISTIC]
+BEGIN
+	-- codigo a executar
+END
 ```
 
-Exemplo, para alterar nivel de isolamento da sessão para repeatable read
+por exemplo:
+
 ``` sql
-SET SESSION TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+DELIMITER $$
+
+CREATE FUNCTION ufn_darBonus (notaantiga DOUBLE, bonus DOUBLE)
+DETERMINISTIC
+BEGIN
+	DECLARE notabonificada DOUBLE;
+	SET notabonificada = notaantiga + bonus;
+	RETURN notabonificada;
+END$$
+
+DELIMITER ;
 ```
 
+As functions são funções definidas pelo utilizador que, uma vez criadas, têm um comportamento semelhante a funções já existentes no SGBD e podem ser usadas nas queries, por exemplo:
+
+``` sql
+SELECT nome, nota, ufn_darBonus(nota, 2) FROM Aluno;
+```
+
+Podemos destruir uma função usando a cláusula ```DROP```:
+``` sql
+DROP FUNCTION ufn_darBonus;
+```
 
 ## 3. Condições IF e CASE
 No MySQL o autocommit está ligado por default, o que significa que todas as instruções são executadas como uma transação quando é encontrado o caracter ```;```. Podemos desligar este mecanismo usando:
