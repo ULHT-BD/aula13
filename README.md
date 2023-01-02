@@ -1,5 +1,5 @@
 # aula13
-Nesta aula introduzimos as vantagens e utilização de PL/SQL. Falamos sobre estruturas básicas Stored Procedures, Stored Functions e Triggers e apresentamos clausulas para controlo de fluxo (if, case, while e loop).
+Nesta aula introduzimos as vantagens e utilização de PL/SQL. Falamos sobre estruturas básicas Stored Procedures, Stored Functions e Triggers (mais detalhes na [aula seguinte](https://github.com/ULHT-BD/aula14/)) e apresentamos clausulas para controlo de fluxo (if, case, while e loop).
 Bom trabalho!
 
 [0. Requisitos](#0-requisitos)
@@ -12,7 +12,9 @@ Bom trabalho!
 
 [4. Ciclos WHILE e LOOP](#4-ciclos-while-e-loop)
 
-[5. Resoluções](#5-resoluções)
+[5. Trabalho de Casa](#5-trabalho-de-casa)
+
+[6. Resoluções](#6-resoluções)
 
 [Bibliografia e Referências](#bibliografia-e-referências)
 
@@ -26,35 +28,40 @@ Caso já tenha o docker pode iniciá-lo usando o comando ```docker start mysgbd`
 
 Deve também ter o cliente DBeaver.
 
-## 1. Transação e Propriedades Acid
-Uma transação consiste na execução de um conjunto de instruções que acede e possivelmente altera dados e que deve ser executada de forma atómica. Um exemplo de transação é a transferência de 50€ entre uma conta bancária A e outra conta bancária B uma vez que envolve uma sequência de instruções de leitura e escrita do saldo.
+## 1. Stored Procedures
+Stored Procedure são procedimentos em SQL armazenados como objetos de código pré-compilado na base de dados e que podem ser executados diretamente no SGBD. Permitem assegurar eficiência e segurança.
 
-Exemplo:
+A sintaxe para criação de um SP é
+
+``` sql
+CREATE PROCEDURE <proc-name> 
+		(param_spec1, param_spec2, …, param_specn ) 
+BEGIN
+	-- codigo a executar	
+END;
 ```
-Read(A)
-A := A – 50
-Write(A)
-Read(B)
-B := B + 50
-Write(B)
+
+por exemplo
+``` sql
+DELIMITER $$
+
+CREATE PROCEDURE sp_exemplo (IN param1 INT, OUT param2 INT)
+BEGIN
+	SELECT COUNT(*) INTO param2 
+	FROM tabela
+	WHERE num=param1;
+END$$
+
+DELIMITER ;
 ```
 
-O fluxo de execução de uma transação pode ser descrito por uma máquina de estados, composta por 5 estados, bem definidos:
-<img width="577" alt="image" src="https://user-images.githubusercontent.com/32137262/207198610-ea64864c-bd67-4ccc-93fb-fa6589c16701.png">
+Chamamos o procedimento usando a cláusula ```CALL```, por exemplo:
+``` sql
+CALL sp_exemplo(1, @a);
+```
 
 
-Para assegurar a integridade dos dados, a BD deve garantir as propriedades ACID:
-
-* Atomicidade – conjunto é realizado ou nada é realizado
-
-* Consistência – execução de transações em isolamento preserva consistência de dados
-
-* Isolamento –transações devem ignorar existência de transações concorrentes 
-
-* Durabilidade – conclusão da transação implica dados persistentes
-
-
-## 2. Anomalias e Níveis de Isolamento
+## 2. Functions
 A execução concorrente de várias transações pode conduzir a várias anomalias bem conhecidas Dirty Read, Non-Repeatable Read e Phantom Read.
 
 Consoante a aplicação a desenvolver, podemos querer tolerar/permitir a ocorrência de algumas destas anomalias ou assegurar um maior nível de isolamento.
@@ -74,7 +81,8 @@ Exemplo, para alterar nivel de isolamento da sessão para repeatable read
 SET SESSION TRANSACTION ISOLATION LEVEL REPEATABLE READ;
 ```
 
-## 3. Transações em SQL
+
+## 3. Condições IF e CASE
 No MySQL o autocommit está ligado por default, o que significa que todas as instruções são executadas como uma transação quando é encontrado o caracter ```;```. Podemos desligar este mecanismo usando:
 
 ``` sql
@@ -137,15 +145,24 @@ Abra duas sessões/tabs com scripts diferentes no DBeaver. Sugestão no topo adi
 6. Volte a executar a sequência de passos descrita no exercício anterior para verificar o resultado quando o nível de isolamento é read commited e repeatable read.
 
 
-## 4. Trabalho de Casa
-(a publicar)
+## 4. Ciclos WHILE e LOOP
+(não há trabalho de casa devido a entega de trabalho de grupo)
 
-## 5. Resoluções
-[Resolução dos exercícios em aula](https://github.com/ULHT-BD/aula11/blob/main/aula11_resolucao.sql)
+### Exercícios
+Abra duas sessões/tabs com scripts diferentes no DBeaver. Sugestão no topo adicione um comentário sessão1 ou sessão2
+
+
+## 5. Trabalho de Casa
+(não há trabalho de casa devido a entega de trabalho de grupo)
+
+
+## 6. Resoluções
+[Resolução dos exercícios em aula](https://github.com/ULHT-BD/aula13/blob/main/aula13_resolucao.sql)
+
 
 ## Bibliografia e Referências
-* [Slides aula](https://github.com/ULHT-BD/aula12/blob/main/Aula12.pdf) 
-* [Isolation Levels - Medium]((https://medium.com/analytics-vidhya/understanding-mysql-transaction-isolation-levels-by-example-1d56fce66b3d))
+* [Slides aula](https://github.com/ULHT-BD/aula13/blob/main/Aula13.pdf) 
+* [Documentação PLSQL - tutorialspoint](https://www.tutorialspoint.com/plsql/index.htm)
 
 
 ## Outros
