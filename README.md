@@ -210,8 +210,27 @@ podemos controlar o fluxo de execução de loops recorrendo às cláusulas ```IT
 
 
 ### Exercícios
+1. Escreva o código PL/SQL que permite criar o procedimento que recebe como argumento dois inteiros e retorna soma, subtração e multiplicação. Deverá ser executado usando
+``` sql
+CALL sp_operacoes(10, 15, @soma, @diferenca, @multiplicacao);
+```
 
+2. Escreva o código PL/SQL que permite criar o procedimento que recebe como argumento um JOB_ID e devolve o salário médio para essa posição
+``` sql
+CALL sp_avgsalary('IT_ADMIN', @salmedio);
+```
 
+3. Escreva o código PL/SQL que permite criar uma função que recebe cinco valores inteiros e devolve o valor máximo
+``` sql
+SELECT ufn_max3(3, 8, 2, 100, 6);
+```
+
+4. Escreva o código PL/SQL que permite criar uma função que recebe um código de departamento e retorna o valor médio de salários desse departamento. Caso seja NULL, retorna o salário de todos os empregados da empresa.
+``` sql
+SELECT ufn_avgsalary(NULL);
+
+SELECT ufn_avgsalary(90);
+```
 
 ## 5. Trabalho de Casa
 (não há trabalho de casa devido a entrega de trabalho de grupo até dia 8)
