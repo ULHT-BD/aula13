@@ -88,6 +88,7 @@ CREATE FUNCTION ufn_darBonus (notaantiga DOUBLE, bonus DOUBLE)
 DETERMINISTIC
 BEGIN
 	DECLARE notabonificada DOUBLE;
+	
 	SET notabonificada = notaantiga + bonus;
 	RETURN notabonificada;
 END$$
@@ -123,9 +124,9 @@ END IF
 por exemplo:
 ``` sql
 IF salario > 760 THEN
-  SET @res = 'acima do salário mínimo';
+  SET res = 'acima do salário mínimo';
 ELSE
-  SET @res = 'abaixo do salário mínimo';
+  SET res = 'abaixo do salário mínimo';
 END IF
 ```
 
@@ -160,18 +161,56 @@ END CASE;
 por exemplo:
 ``` sql
 CASE JOB_ID
-  WHEN 'IT_ADMIN' THEN SET @res = 'Administrador de Sistemas';
-  WHEN 'HR_MGR' THEN SET @res = 'Gestor de Recurso Humanos';
+  WHEN 'IT_ADMIN' THEN SET res = 'Administrador de Sistemas';
+  WHEN 'HR_MGR' THEN SET res = 'Gestor de Recurso Humanos';
 ELSE
-  SET @res = 'Não definido';
+  SET res = 'Não definido';
 END CASE;
 ```
 
 ## 4. Ciclos WHILE, REPEAT e LOOP
+Podemos em SQL usar ciclos para definir o controlo de fluxo de execução e repetir blocos de código de acordo com o teste de uma condição. Tal como em outras linguagens podemos usar a cláusula ```LOOP```, ```REPEAT``` e ```WHILE```.
+
+A sintaxe para ```LOOP``` é:
+
+``` sql
+[begin_label:] LOOP
+<statement list>
+END LOOP [end_label]
+```
+
+A sintaxe para ```REPEAT/UNTIL``` é:
+
+``` sql[begin_label:] REPEAT
+<statement list>
+UNTIL <search_condition>
+END REPEAT [end_label]
+```
+
+A sintaxe para ```WHILE``` é:
+
+``` sql
+[begin_label:] WHILE <search_condition> DO
+<statement list>
+END WHILE [end_label]
+```
+
+Por exemplo:
+``` sql
+DECLARE sal FLOAT DEFAULT 0;
+DECLARE id_iter INT DEFAULT 1;
+
+WHILE sal < 1000 DO
+  SELECT salary INTO sal WHERE id = id_iter;
+  SET id_iter = id_iter + 1;
+END WHILE
+```
+
+podemos controlar o fluxo de execução de loops recorrendo às cláusulas ```ITERATE <label>``` para recomeçar loop de novo (equivalente a continue) ou ```LEAVE <label>``` para sair do ciclo (equivalente a break).
 
 
 ### Exercícios
-Abra duas sessões/tabs com scripts diferentes no DBeaver. Sugestão no topo adicione um comentário sessão1 ou sessão2
+
 
 
 ## 5. Trabalho de Casa
