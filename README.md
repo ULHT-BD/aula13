@@ -208,6 +208,19 @@ END WHILE
 
 podemos controlar o fluxo de execução de loops recorrendo às cláusulas ```ITERATE <label>``` para recomeçar loop de novo (equivalente a continue) ou ```LEAVE <label>``` para sair do ciclo (equivalente a break).
 
+Por exemplo:
+``` sql
+DECLARE sal FLOAT DEFAULT 0;
+DECLARE id_iter INT DEFAULT 1;
+
+loopsal: WHILE sal < 1000 DO
+  SELECT salary INTO sal WHERE id = id_iter;
+  SET id_iter = id_iter + 1;
+  IF sal > 2000
+    LEAVE loopsal;
+  END IF
+END WHILE
+```
 
 ### Exercícios
 1. Escreva o código PL/SQL que permite criar o procedimento que recebe como argumento dois inteiros e retorna soma, subtração e multiplicação. Deverá ser executado usando
