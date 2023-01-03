@@ -10,7 +10,7 @@ Bom trabalho!
 
 [3. Condições IF e CASE](#3-condições-if-e-case)
 
-[4. Ciclos WHILE e LOOP](#4-ciclos-while-e-loop)
+[4. Ciclos WHILE, REPEAT e LOOP](#4-ciclos-while-repeat-e-loop)
 
 [5. Trabalho de Casa](#5-trabalho-de-casa)
 
