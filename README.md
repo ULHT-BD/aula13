@@ -216,7 +216,7 @@ DECLARE id_iter INT DEFAULT 1;
 loopsal: WHILE sal < 1000 DO
   SELECT salary INTO sal WHERE id = id_iter;
   SET id_iter = id_iter + 1;
-  IF sal > 2000
+  IF sal < 200
     LEAVE loopsal;
   END IF
 END WHILE
