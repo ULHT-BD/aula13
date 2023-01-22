@@ -85,6 +85,7 @@ por exemplo:
 DELIMITER $$
 
 CREATE FUNCTION ufn_darBonus (notaantiga DOUBLE, bonus DOUBLE)
+RETURNS DOUBLE
 DETERMINISTIC
 BEGIN
 	DECLARE notabonificada DOUBLE;
